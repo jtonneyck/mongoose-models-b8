@@ -5,7 +5,7 @@ app.get("/", (req,res)=> {
 
     Movie.find({})
     .then((movies)=> {
-        res.render("movies/list", {movies:movies});
+        res.render("movies/list", {movies:movies, username: req.session.currentUser.username});
     })
     .catch((err)=> {
         console.log("Err", err);

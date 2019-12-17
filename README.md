@@ -1,0 +1,3 @@
+# Mongoose - Example Demo Code
+
+This is demo code that belongs to a lesson about Mongoose. In the models/movie file you see how to create a model. In queryPractice that model is used to perform any of the CRUD operations. In 'app.js' 'views' and 'routes' it's demonstrated how you can organize a full stack application. The example only shows how to combine the R operation with a movies/list view and the routes/movies controller <small>Tecnnically routes/movies is not really a controller, but it contains one( everything withing in `(req, res)=> {...}`</small>. We're going to combine any of the CUD in CRUD later.
