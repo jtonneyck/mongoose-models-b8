@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 
 app.get("/", (req,res)=> {
-
+    // stupid change
     Movie.find({})
     .then((movies)=> {
         res.render("movies/list", {movies:movies, username: req.session.currentUser.username});
