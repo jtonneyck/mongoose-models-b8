@@ -12,7 +12,7 @@ app.get("/", (req,res, next)=> {
         console.log("Err", err);
         next(createError(500, 'Sorry, our database crashed. Please come back later.'))
     })
-
+    // lala
 })
 
 
