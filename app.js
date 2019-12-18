@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const Movie = require("./models/Movie");
+const createError = require('http-errors')
 
 var bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -35,14 +36,23 @@ app.use("/", (req,res, next)=> {
 // protection middleware. If the user isn't logged in, redirect. If the user IS logged in proceed tot the next route/middleware
 function protect(req,res, next) {
     if(req.session.currentUser) next();
-    else res.redirect("/user/login");
+    else next(createError(401, 'Please login to view this page.'));
 }
 
-app.use("/", require("./routes/home"));
+//app.use("/", require("./routes/home"));
 app.use("/movies", protect)
 app.use("/directors", protect )
 app.use("/movies", require("./routes/movies"));
 app.use("/user", require("./routes/user"));
+
+app.use("/", (req,res,next)=> {
+    next(createError(404, "Page not found."))
+})
+
+app.use((err, req, res, next)=> {
+    console.log(err)
+    res.render("error", err)
+})
 
 app.listen(3000,()=> {
     console.log("Webserver listening");

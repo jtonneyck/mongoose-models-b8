@@ -2,15 +2,16 @@ const express = require("express");
 const app = express();
 const User = require("../models/user");
 const bcrypt = require('bcrypt');
+const createError = require('http-errors')
 
 app.get("/signup", (req,res)=> {
     res.render("user/signup");
 })
 
-app.post("/signup", (req,res)=> {
+app.post("/signup", (req,res, next)=> {
 
-    bcrypt.hash(req.body.password, 10, function(err, hash) {
-        if(err) return res.send("error");
+    bcrypt.hash({}, 10, function(err, hash) {
+        if(err) return next(createError(500, "Hashing failed. Trying to hack us?"));
         // Store hash in your password DB.
         User.create({
             username: req.body.username,
@@ -20,7 +21,7 @@ app.post("/signup", (req,res)=> {
             res.redirect("/user/login");
         })
         .catch((error)=> {
-            res.render("error", error)
+            next(createError(500, "Woow, our database crashed. Please come back later."))
         })
     });
 })
@@ -32,15 +33,15 @@ app.get("/login", (req,res)=> {
 app.post("/login", (req,res)=> {
     User.findOne({username: req.body.username})
         .then((user)=> {
-            if(!user) res.status(403).send("Invalid credentials.");
+            if(!user) res.status(403).render("error");
             else { 
                 bcrypt.compare(req.body.password, user.password, function(err, correct) {
-                    if(err) return res.send("error");
+                    if(err) return res.render("error");
                     else if(correct) {
                         req.session.currentUser = user;
                         res.send("Logged in");
                     } else {
-                        res.status(403).send("Invalid credentials.");        
+                        res.status(403).render("error", err);        
                     }
                 });                
             }

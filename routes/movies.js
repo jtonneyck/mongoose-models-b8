@@ -1,15 +1,16 @@
 const express = require("express");
 const app = express();
+const createError = require('http-errors')
 
-app.get("/", (req,res)=> {
+app.get("/", (req,res, next)=> {
 
     Movie.find({})
     .then((movies)=> {
-        res.render("movies/list", {movies:movies, username: req.session.currentUser.username});
+        res.render("movies/list", {movies:movies});
     })
     .catch((err)=> {
         console.log("Err", err);
-        res.send("ERROR ERROR");
+        next(createError(500, 'Sorry, our database crashed. Please come back later.'))
     })
 
 })
