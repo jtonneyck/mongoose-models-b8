@@ -5,7 +5,7 @@ const createError = require('http-errors')
 
 var bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }))
-
+app.locals.title = "Whieeee"
 var session = require('express-session')
 var sessionOptions = {
     secret: 'keyboard cat', // don't change it for now. This decides how your sid is going to be created
@@ -36,21 +36,30 @@ app.use("/", (req,res, next)=> {
 // protection middleware. If the user isn't logged in, redirect. If the user IS logged in proceed tot the next route/middleware
 function protect(req,res, next) {
     if(req.session.currentUser) next();
-    else next(createError(401, 'Please login to view this page.'));
+    else {
+        req.session.redirectUrl = req.originalUrl; // save the route the user was trying to go to in the session
+        res.redirect("/user/login") // after the successfull login we're redirecting to this route. Checkout the Post login route
+    };
 }
+app.use((req,res, next)=> {
+    if(req.session.currentUser) res.locals.user = req.session.currentUser;
+    next();
+})
 
 //app.use("/", require("./routes/home"));
-app.use("/movies", protect)
+// app.use("/movies", protect)
 app.use("/directors", protect )
-app.use("/movies", require("./routes/movies"));
+app.use("/movies", protect, require("./routes/movies"));
 app.use("/user", require("./routes/user"));
 
 app.use("/", (req,res,next)=> {
-    next(createError(404, "Page not found."))
+    next(createError(404, "Movie Page not found."))
 })
-
+// remember the page the user came from
+// pass user state/session info to all hbs files
 app.use((err, req, res, next)=> {
     console.log(err)
+
     res.render("error", err)
 })
 

@@ -4,13 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>{{title}}</title>
 </head>
 <body>
+    <h1>{{title}}</h1>
     <nav>
         <ul>
-            <li><a href="/user/signup">signup</a></li>
-            <li><a href="/user/login">login</a></li>
+            {{#if user }}
+                <li><a href="/user/logout">logout</a></li> 
+                <li>Hi {{user.username}} </li>
+            {{else}}
+                <li><a href="/user/signup">signup</a></li>
+                <li><a href="/user/login">login</a></li>
+            {{/if}}
             <li><a href="/movies">movies</a></li>
         </ul>
     </nav>

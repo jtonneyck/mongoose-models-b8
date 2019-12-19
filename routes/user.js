@@ -10,7 +10,7 @@ app.get("/signup", (req,res)=> {
 
 app.post("/signup", (req,res, next)=> {
 
-    bcrypt.hash({}, 10, function(err, hash) {
+    bcrypt.hash(req.body.password, 10, function(err, hash) {
         if(err) return next(createError(500, "Hashing failed. Trying to hack us?"));
         // Store hash in your password DB.
         User.create({
@@ -39,7 +39,11 @@ app.post("/login", (req,res)=> {
                     if(err) return res.render("error");
                     else if(correct) {
                         req.session.currentUser = user;
-                        res.send("Logged in");
+                        if(req.session.redirectUrl) {
+                            res.redirect(req.session.redirectUrl) // redirect to the url the user was trying to go to (checkout the protect middleware in app.js)
+                        } else {
+                            res.redirect("/"); // default redirect url (if the user is going to login directly)
+                        }
                     } else {
                         res.status(403).render("error", err);        
                     }

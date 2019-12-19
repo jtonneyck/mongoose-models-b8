@@ -5,7 +5,7 @@ const createError = require('http-errors')
 app.get("/", (req,res, next)=> {
     Movie.find({})
     .then((movies)=> {
-        res.render("movies/list", {movies:movies});
+        res.render("movies/list", {movies:movies, user: req.sessions.currentUser});
     })
     .catch((err)=> {
         console.log("Err", err);
