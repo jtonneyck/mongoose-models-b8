@@ -38,21 +38,24 @@ function protect(req,res, next) {
     if(req.session.currentUser) next();
     else {
         req.session.redirectUrl = req.originalUrl; // save the route the user was trying to go to in the session
-        res.redirect("/user/login") // after the successfull login we're redirecting to this route. Checkout the Post login route
+        res.redirect("/auth/login") // after the successfull login we're redirecting to this route. Checkout the Post login route
     };
 }
 app.use((req,res, next)=> {
     if(req.session.currentUser) res.locals.user = req.session.currentUser;
     next();
 })
+app.use(express.static('uploads'));
+app.use(express.static('public'));
 
-//app.use("/", require("./routes/home"));
-// app.use("/movies", protect)
+app.use("/movies", protect)
 app.use("/directors", protect )
 app.use("/movies", protect, require("./routes/movies"));
-app.use("/user", require("./routes/user"));
+app.use("/auth", require("./routes/auth"));
+app.use("/user", protect, require("./routes/user"));
+app.use("/", require("./routes/home"));
 
-app.use("/", (req,res,next)=> {
+app.use((req,res,next)=> {
     next(createError(404, "Movie Page not found."))
 })
 // remember the page the user came from

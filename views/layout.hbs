@@ -11,11 +11,12 @@
     <nav>
         <ul>
             {{#if user }}
-                <li><a href="/user/logout">logout</a></li> 
+                <li><a href="/auth/logout">logout</a></li> 
+                <li><a href="/user/upload-profile-pic">profile</a></li> 
                 <li>Hi {{user.username}} </li>
             {{else}}
-                <li><a href="/user/signup">signup</a></li>
-                <li><a href="/user/login">login</a></li>
+                <li><a href="/auth/signup">signup</a></li>
+                <li><a href="/auth/login">login</a></li>
             {{/if}}
             <li><a href="/movies">movies</a></li>
         </ul>

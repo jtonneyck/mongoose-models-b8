@@ -2,5 +2,6 @@ const mongoose = require("mongoose")
 
 module.exports = mongoose.model("user", {
     username: String,
-    password: String
+    password: String,
+    profile_pic: String 
 })
