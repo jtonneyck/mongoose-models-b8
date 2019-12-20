@@ -1,5 +1,26 @@
 <form action="/auth/signup" method="POST">
-    <input type="text" name="username">
-    <input type="password" name="password">
+    <p id="available"></p>
+    <input id="username" type="text" required name="username">
+    <input type="text" required name="firstname" placeholder="firstname">
+    <input type="text" required name="lastname" placeholder="lastname">
+    <input type="email" required name="email" placeholder="email">
+    <input type="password" required name="password">
     <button type="submit">Signup</button>
 </form>
+
+<script>
+    let $form = document.getElementsByTagName("form")[0];
+    document.getElementById("username").addEventListener("blur", (event)=>{
+        let usernameInputValue = event.target.value;
+        axios.get(`/auth/username-availability/${usernameInputValue}`)
+            .then((response)=> {
+                let $p = document.getElementById("available");
+                if(response.data.available) $p.innerHTML = "Username available";
+                else $p.innerHTML = "Username unailable";
+            })
+            .catch((error)=> {
+                // do some dom manipulation based on error
+            })
+    })
+
+</script>

@@ -61,8 +61,7 @@ app.use((req,res,next)=> {
 // remember the page the user came from
 // pass user state/session info to all hbs files
 app.use((err, req, res, next)=> {
-    console.log(err)
-
+    console.log("ERROR", err)
     res.render("error", err)
 })
 

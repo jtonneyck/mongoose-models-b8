@@ -13,7 +13,7 @@ app.post("/upload-profile-pic", upload.single('profile-picture'), (req,res)=> {
         profile_pic: req.file.filename
     })
     .then((user)=> {
-        req.session.currentUser.profile_pic = req.file.filename;
+        req.session.currentUser.profile_pic = req.file.filename; // update the session data so that we can base views on it (like profile.hbs or in the navbar)
         res.redirect("/user/upload-profile-pic")
     })
     .catch((err)=> {
